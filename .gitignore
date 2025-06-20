@@ -1,0 +1,14 @@
+# Java
+/target
+*.class
+*.log
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Credentials
+info-bot-credentials.json
+*.env
