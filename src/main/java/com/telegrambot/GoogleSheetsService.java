@@ -7,24 +7,32 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 
 public class GoogleSheetsService {
 
     private static final String APPLICATION_NAME = "InfoBot";
-    private static final String SPREADSHEET_ID = "1Z1cXREsuank6PijxIw4W-LJZrH2B0-f6QqT0A_8MF1k"; // Заменить на свой
+    private static final String SPREADSHEET_ID = System.getenv("SPREADSHEET_ID"); // ✅ берёт ID из переменной
     private static final String RANGE = "Sheet1!A:L";
     private static Sheets sheetsService;
 
-    public static void init() throws IOException, GeneralSecurityException {
-        FileInputStream serviceAccountStream = new FileInputStream("info-bot-credentials.json");
+    public static void init() throws Exception {
+        String base64Json = System.getenv("GOOGLE_CREDENTIALS_JSON");
 
-        GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream)
+        if (base64Json == null || base64Json.isEmpty()) {
+            throw new IllegalStateException("GOOGLE_CREDENTIALS_JSON is missing or empty");
+        }
+
+        byte[] decoded = Base64.getDecoder().decode(base64Json);
+        InputStream stream = new ByteArrayInputStream(decoded);
+
+        GoogleCredential credential = GoogleCredential.fromStream(stream)
                 .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS));
 
         sheetsService = new Sheets.Builder(
@@ -35,10 +43,8 @@ public class GoogleSheetsService {
                 .build();
     }
 
-    public static void appendRow(List<String> rowData) throws IOException {
-        ValueRange body = new ValueRange()
-                .setValues(Collections.singletonList(new ArrayList<>(rowData)));
-
+    public static void appendRow(List<Object> rowData) throws Exception {
+        ValueRange body = new ValueRange().setValues(List.of(rowData));
         sheetsService.spreadsheets().values()
                 .append(SPREADSHEET_ID, RANGE, body)
                 .setValueInputOption("RAW")
