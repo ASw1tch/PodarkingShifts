@@ -49,7 +49,7 @@ public class MyBot extends TelegramLongPollingBot {
             sessions.put(chatId, newSession);
 
             sendMessage(chatId, "Привет, " + newSession.fullName + "! 👋\n\n" +
-                    "Это бот для сбора ежедневных отчётов.\n" +
+                    "Это бот для сбора ежедневных отчётов производства.\n" +
                     "Сегодняшняя дата: " + newSession.date + "\n\n" +
                     "Чтобы начать — просто напиши Mяу.");
             return;
@@ -116,7 +116,7 @@ public class MyBot extends TelegramLongPollingBot {
                             safe(session.comment)
                     );
                     googleSheetsService.appendRow(row);
-                    sendMessage(chatId, "✅ Отчёт успешно записан в таблицу! https://docs.google.com/spreadsheets/d/1Z1cXREsuank6PijxIw4W-LJZrH2B0-f6QqT0A_8MF1k/edit?usp=sharing");
+                    sendMessage(chatId, "✅ Отчёт успешно записан в таблицу!✅");
                 } catch (Exception e) {
                     sendMessage(chatId, "⚠️ Ошибка при записи в таблицу: " + e.getMessage());
                     e.printStackTrace();
@@ -125,7 +125,7 @@ public class MyBot extends TelegramLongPollingBot {
                 session.step = BotStep.DONE;
             }
             case DONE -> sendMessage(chatId, "Ты уже всё заполнила на сегодня ✅\n" +
-                    "Хочешь добавить новый проект, деятельность и время? Снова жми /start");
+                    "Хочешь добавить новый проект, деятельность и время? Снова жми /start или /add");
         }
     }
 
