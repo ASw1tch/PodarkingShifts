@@ -38,20 +38,27 @@ public class MyBot extends TelegramLongPollingBot {
         long chatId = msg.getChatId();
         String text = msg.getText().trim();
 
+        if (text.equalsIgnoreCase("/dinner") && sessions.containsKey(chatId)) {
+            UserSession session = sessions.get(chatId);
+            session.step = BotStep.LUNCH;
+            sendWithButtons(chatId, "Сколько длился обед?", "00:15", "00:30", "00:45", "01:00", "Без обеда");
+            return;
+        }
+
         // Если человек ввёл /start — сбрасываем сессию и начинаем заново
         if (text.equalsIgnoreCase("/start")) {
             UserSession newSession = new UserSession();
             newSession.fullName = msg.getFrom().getFirstName() + " " +
                     (msg.getFrom().getLastName() != null ? msg.getFrom().getLastName() : "");
             newSession.date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            newSession.step = BotStep.WELCOME;
+            newSession.step = BotStep.PROJECT;
 
             sessions.put(chatId, newSession);
 
             sendMessage(chatId, "Привет, " + newSession.fullName + "! 👋\n\n" +
                     "Это бот для сбора ежедневных отчётов производства.\n" +
                     "Сегодняшняя дата: " + newSession.date + "\n\n" +
-                    "Чтобы начать — просто напиши Mяу.");
+                    "Начнём!\nНа каком проекте ты работал(а)? (или напиши 'другое')");
             return;
         }
 
@@ -64,20 +71,6 @@ public class MyBot extends TelegramLongPollingBot {
         UserSession session = sessions.get(chatId);
 
         switch (session.step) {
-            case WELCOME -> {
-                session.step = BotStep.WORK_HOURS;
-                sendMessage(chatId, "Сколько часов ты работал(а) в общем сегодня? (формат HH:MM)");
-            }
-            case WORK_HOURS -> {
-                if (TimeValidator.isInvalid(text)) {
-                    sendMessage(chatId, "Пожалуйста, введи время в формате HH:MM (например, 08:30)");
-                    return;
-                }
-                session.workHours = text;
-                session.step = BotStep.LUNCH;
-                sendWithButtons(chatId, "Сколько длился обед?", "00:15", "00:30", "00:45", "01:00", "Без обеда");
-            }
-
             case LUNCH -> {
                 session.lunchDuration = text;
                 session.step = BotStep.PROJECT;
@@ -124,8 +117,11 @@ public class MyBot extends TelegramLongPollingBot {
 
                 session.step = BotStep.DONE;
             }
-            case DONE -> sendMessage(chatId, "Ты уже всё заполнила на сегодня ✅\n" +
-                    "Хочешь добавить новый проект, деятельность и время? Снова жми /start или /add");
+            case DONE -> sendMessage(chatId, "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед");
+            case DINNER -> {
+                session.step = BotStep.LUNCH;
+                sendWithButtons(chatId, "Сколько длился обед?", "00:15", "00:30", "00:45", "01:00", "Без обеда");
+            }
         }
     }
 
@@ -176,4 +172,3 @@ public class MyBot extends TelegramLongPollingBot {
     }
 
 }
-
