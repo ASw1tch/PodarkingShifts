@@ -117,7 +117,8 @@ public class MyBot extends TelegramLongPollingBot {
 
                 session.step = BotStep.DONE;
             }
-            case DONE -> sendMessage(chatId, "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед");
+            case DONE ->
+                    sendMessage(chatId, "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед");
             case DINNER -> {
                 session.step = BotStep.LUNCH;
                 sendWithButtons(chatId, "Сколько длился обед?", "00:15", "00:30", "00:45", "01:00", "Без обеда");
