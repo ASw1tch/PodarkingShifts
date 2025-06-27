@@ -55,10 +55,17 @@ public class MyBot extends TelegramLongPollingBot {
 
             sessions.put(chatId, newSession);
 
-            sendMessage(chatId, "Привет, " + newSession.fullName + "! 👋\n\n" +
-                    "Это бот для сбора ежедневных отчётов производства.\n" +
-                    "Сегодняшняя дата: " + newSession.date + "\n\n" +
-                    "Начнём!\nНа каком проекте ты работал(а)? (или напиши 'другое')");
+            SendMessage message = new SendMessage();
+            message.setChatId(String.valueOf(chatId));
+            message.setText("Привет, " + newSession.fullName + "! 👋\n\n" +
+                "Сегодняшняя дата: *" + newSession.date + "*\n\n" +
+                "*Начнём!* 🚀\nНа каком проекте ты работал(а)? (или напиши 'Другое')");
+            message.setParseMode("Markdown");
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
             return;
         }
 
@@ -85,7 +92,8 @@ public class MyBot extends TelegramLongPollingBot {
                 "", // activityTime
                 "", // comment
                 "", // пустая колонка I
-                java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")) // timestamp колонка J
+                java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
+                    .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
         );
         googleSheetsService.appendRow(row);
         sendMessage(chatId, "✅ Обед успешно добавлен и записан в таблицу!✅");
@@ -128,7 +136,8 @@ public class MyBot extends TelegramLongPollingBot {
                             safe(session.activityTime),
                             safe(session.comment),
                             "", // пустая колонка I
-                            java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")) // timestamp колонка J
+                            java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
+                                .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
                     );
                     googleSheetsService.appendRow(row);
                     sendMessage(chatId, "✅ Отчёт успешно записан в таблицу!✅");
