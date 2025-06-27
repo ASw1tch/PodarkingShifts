@@ -96,7 +96,7 @@ public class MyBot extends TelegramLongPollingBot {
                     .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
         );
         googleSheetsService.appendRow(row);
-        sendMessage(chatId, "✅ Обед успешно добавлен и записан в таблицу!✅");
+        sendMessage(chatId, "✅ Обед успешно добавлен! ✅");
     } catch (Exception e) {
         sendMessage(chatId, "⚠️ Ошибка при записи обеда в таблицу: " + e.getMessage());
         e.printStackTrace();
@@ -140,7 +140,7 @@ public class MyBot extends TelegramLongPollingBot {
                                 .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
                     );
                     googleSheetsService.appendRow(row);
-                    sendMessage(chatId, "✅ Отчёт успешно записан в таблицу!✅");
+                    sendMessage(chatId, "✅ Отчёт успешно записан! ✅");
                 } catch (Exception e) {
                     sendMessage(chatId, "⚠️ Ошибка при записи в таблицу: " + e.getMessage());
                     e.printStackTrace();
