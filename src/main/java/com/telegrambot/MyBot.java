@@ -1,5 +1,12 @@
 package com.telegrambot;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -7,13 +14,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MyBot extends TelegramLongPollingBot {
 
@@ -73,8 +73,8 @@ public class MyBot extends TelegramLongPollingBot {
         switch (session.step) {
             case LUNCH -> {
                 session.lunchDuration = text;
-                session.step = BotStep.PROJECT;
-                sendMessage(chatId, "На каком проекте ты работал(а)? (или напиши 'другое')");
+                sendMessage(chatId, "✅ Обед успешно добавлен в отчёт!");
+                session.step = BotStep.DONE;
             }
             case PROJECT -> {
                 session.project = text;
@@ -119,10 +119,6 @@ public class MyBot extends TelegramLongPollingBot {
             }
             case DONE ->
                     sendMessage(chatId, "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед");
-            case DINNER -> {
-                session.step = BotStep.LUNCH;
-                sendWithButtons(chatId, "Сколько длился обед?", "00:15", "00:30", "00:45", "01:00", "Без обеда");
-            }
         }
     }
 
