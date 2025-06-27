@@ -72,10 +72,29 @@ public class MyBot extends TelegramLongPollingBot {
 
         switch (session.step) {
             case LUNCH -> {
-                session.lunchDuration = text;
-                sendMessage(chatId, "✅ Обед успешно добавлен в отчёт!");
-                session.step = BotStep.DONE;
-            }
+    session.lunchDuration = text;
+
+    try {
+        List<Object> row = List.of(
+                safe(session.fullName),
+                safe(session.date),
+                "", // workHours
+                safe(session.lunchDuration),
+                "", // project
+                "", // activity
+                "", // activityTime
+                "", // comment
+                java.time.LocalTime.now().toString() // timestamp
+        );
+        googleSheetsService.appendRow(row);
+        sendMessage(chatId, "✅ Обед успешно добавлен и записан в таблицу!");
+    } catch (Exception e) {
+        sendMessage(chatId, "⚠️ Ошибка при записи обеда в таблицу: " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    session.step = BotStep.DONE;
+}
             case PROJECT -> {
                 session.project = text;
                 session.step = BotStep.ACTIVITY;
@@ -106,7 +125,8 @@ public class MyBot extends TelegramLongPollingBot {
                             safe(session.project),
                             safe(session.activity),
                             safe(session.activityTime),
-                            safe(session.comment)
+                            safe(session.comment),
+                            java.time.LocalTime.now().toString() // timestamp
                     );
                     googleSheetsService.appendRow(row);
                     sendMessage(chatId, "✅ Отчёт успешно записан в таблицу!✅");
