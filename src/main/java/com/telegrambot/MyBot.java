@@ -90,7 +90,7 @@ public class MyBot extends TelegramLongPollingBot {
                 "", // project
                 "", // activity
                 "", // activityTime
-                "", // comment
+                "Был добавлен обед", // comment
                 "", // пустая колонка I
                 java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
                     .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
@@ -107,7 +107,7 @@ public class MyBot extends TelegramLongPollingBot {
             case PROJECT -> {
                 session.project = text;
                 session.step = BotStep.ACTIVITY;
-                sendWithButtons(chatId, "Выбери деятельность:", "Пошив", "Крой", "Нанесение", "ОТК", "Переделки", "Другое", "Закупки");
+                sendWithButtons(chatId, "Выбери деятельность:", "Пошив", "Крой", "Нанесение", "ОТК", "Переделки", "Другое", "Закупки", "Дизайн", "ППО", "Печать");
             }
             case ACTIVITY -> {
                 session.activity = text;
