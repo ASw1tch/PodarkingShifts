@@ -20,6 +20,15 @@ public class MyBot extends TelegramLongPollingBot {
     private final Map<Long, UserSession> sessions = new HashMap<>();
     private final GoogleSheetsService googleSheetsService = new GoogleSheetsService();
 
+    // ✅ Карта для замены Telegram имён на полные
+private static final Map<String, String> nameMap = Map.of(
+    "ARTEM", "Артём Пушков",
+    "Anatoliy Switch", "Анатолий Петров",
+    "Валерия", "Герасимчук Лера",
+    "Darja Timošenko", "Дарья Тимошенко",
+    "Evgenya", "Евгения Лисица"
+);
+
     @Override
     public String getBotUsername() {
         return "PodarkingShiftBot"; // ← замени на username из BotFather (например: info_collector_java_bot)
@@ -48,9 +57,13 @@ public class MyBot extends TelegramLongPollingBot {
         // Если человек ввёл /start — сбрасываем сессию и начинаем заново
         if (text.equalsIgnoreCase("/start")) {
             UserSession newSession = new UserSession();
-            newSession.fullName = msg.getFrom().getFirstName() + " " +
-                    (msg.getFrom().getLastName() != null ? msg.getFrom().getLastName() : "");
-            newSession.date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String rawFirstName = msg.getFrom().getFirstName();
+            String tgName = rawFirstName != null ? rawFirstName.toUpperCase() : "";
+
+            String correctedName = nameMap.getOrDefault(tgName, rawFirstName);  
+
+            newSession.fullName = correctedName;
+            newSession.date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             newSession.step = BotStep.PROJECT;
 
             sessions.put(chatId, newSession);
