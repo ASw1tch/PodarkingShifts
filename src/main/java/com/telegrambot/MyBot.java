@@ -58,9 +58,10 @@ private static final Map<String, String> nameMap = Map.of(
         if (text.equalsIgnoreCase("/start")) {
             UserSession newSession = new UserSession();
             String rawFirstName = msg.getFrom().getFirstName();
-            String tgName = rawFirstName != null ? rawFirstName.toUpperCase() : "";
+            String rawLastName = msg.getFrom().getLastName();
+            String tgFullName = (rawLastName != null) ? rawFirstName + " " + rawLastName : rawFirstName;
 
-            String correctedName = nameMap.getOrDefault(tgName, rawFirstName);  
+            String correctedName = nameMap.getOrDefault(tgFullName, tgFullName);
 
             newSession.fullName = correctedName;
             newSession.date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
