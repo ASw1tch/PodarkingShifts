@@ -1,12 +1,5 @@
 package com.telegrambot;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.services.sheets.v4.model.ValueRange;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,10 +8,17 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.ValueRange;
+
 public class GoogleSheetsService {
     private static final String APPLICATION_NAME = "InfoBot";
     private static final String SPREADSHEET_ID = System.getenv("SPREADSHEET_ID"); // ✅ берёт ID из переменной
-    private static final String RANGE = "Sheet1!A:L";
+    private static final String RANGE = "отчёты с 01.07.!A:L";
     private static Sheets sheetsService;
 
     public GoogleSheetsService() {
