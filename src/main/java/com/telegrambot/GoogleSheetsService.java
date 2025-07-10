@@ -21,8 +21,8 @@ public class GoogleSheetsService {
     private static final String SECOND_SPREADSHEET_ID = System.getenv("SECOND_SPREADSHEET_ID");
     private static final String THIRD_SPREADSHEET_ID = System.getenv("THIRD_SPREADSHEET_ID");
     private static final String RANGE_FIRST = "отчёты с 01.07.!A:L"; // название листа первой таблицы
-    private static final String RANGE_SECOND = "From 1.07.25!A:L";         // название листа второй таблицы
-    private static final String RANGE_THIRD = "Ежедневные отчеты!A:L"; // название листа третьей таблицы
+    private static final String RANGE_SECOND = "Ежедневные отчеты!!A:L";         // название листа второй таблицы
+    private static final String RANGE_THIRD = "From 1.07.25!A:L"; // название листа третьей таблицы
     private static Sheets sheetsService;
 
     public GoogleSheetsService() {
