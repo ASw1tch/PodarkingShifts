@@ -108,10 +108,10 @@ private static final Map<String, String> nameMap = Map.of(
                 "Был добавлен обед", // comment
                 "", // пустая колонка I
                 java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
-                    .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
+                    .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) // timestamp колонка J
         );
         String timestamp = java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
-                .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+                .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
         List<Object> rowForThirdSheet = new ArrayList<>();
         rowForThirdSheet.add(safe(session.fullName));     // A
         rowForThirdSheet.add(safe(session.date));         // B
@@ -169,10 +169,10 @@ private static final Map<String, String> nameMap = Map.of(
                             safe(session.comment),
                             "", // пустая колонка I
                             java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
-                                .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
+                                .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) // timestamp колонка J
                     );
                     String timestamp = java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
-                            .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+                            .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
                     List<Object> rowForThirdSheet = new ArrayList<>();
                     rowForThirdSheet.add(safe(session.fullName));     // A
                     rowForThirdSheet.add(safe(session.date));         // B
