@@ -110,9 +110,24 @@ private static final Map<String, String> nameMap = Map.of(
                 java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
                     .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
         );
+        String timestamp = java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
+                .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+        List<Object> rowForThirdSheet = new ArrayList<>();
+        rowForThirdSheet.add(safe(session.fullName));     // A
+        rowForThirdSheet.add(safe(session.date));         // B
+        rowForThirdSheet.add("");                          // C
+        rowForThirdSheet.add(safe(session.lunchDuration));// D
+        rowForThirdSheet.add("");                          // E пустой
+        rowForThirdSheet.add("");                          // F
+        rowForThirdSheet.add("");                          // G
+        rowForThirdSheet.add("");                          // H
+        rowForThirdSheet.add("Был добавлен обед");        // I
+        rowForThirdSheet.add("");                          // J пустой
+        rowForThirdSheet.add("");                          // K пустой
+        rowForThirdSheet.add(timestamp);                   // L
         googleSheetsService.appendRow(row);
         googleSheetsService.appendRowToSecondSheet(row);
-        googleSheetsService.appendRowToThirdSheet(row);
+        googleSheetsService.appendRowToThirdSheet(rowForThirdSheet);
         sendMessage(chatId, "✅ Обед успешно добавлен! ✅");
     } catch (Exception e) {
         sendMessage(chatId, "⚠️ Ошибка при записи обеда в таблицу: " + e.getMessage());
@@ -156,9 +171,24 @@ private static final Map<String, String> nameMap = Map.of(
                             java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
                                 .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
                     );
+                    String timestamp = java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
+                            .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+                    List<Object> rowForThirdSheet = new ArrayList<>();
+                    rowForThirdSheet.add(safe(session.fullName));     // A
+                    rowForThirdSheet.add(safe(session.date));         // B
+                    rowForThirdSheet.add(safe(session.workHours));    // C
+                    rowForThirdSheet.add(safe(session.lunchDuration));// D
+                    rowForThirdSheet.add("");                          // E пустой
+                    rowForThirdSheet.add(safe(session.project));      // F
+                    rowForThirdSheet.add(safe(session.activity));     // G
+                    rowForThirdSheet.add(safe(session.activityTime)); // H
+                    rowForThirdSheet.add(safe(session.comment));      // I
+                    rowForThirdSheet.add("");                          // J пустой
+                    rowForThirdSheet.add("");                          // K пустой
+                    rowForThirdSheet.add(timestamp);                   // L
                     googleSheetsService.appendRow(row);
                     googleSheetsService.appendRowToSecondSheet(row);
-                    googleSheetsService.appendRowToThirdSheet(row);
+                    googleSheetsService.appendRowToThirdSheet(rowForThirdSheet);
                     sendMessage(chatId, "✅ Отчёт успешно записан! ✅");
                 } catch (Exception e) {
                     sendMessage(chatId, "⚠️ Ошибка при записи в таблицу: " + e.getMessage());
