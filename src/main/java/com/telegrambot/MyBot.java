@@ -26,7 +26,8 @@ private static final Map<String, String> nameMap = Map.of(
     "Anatoliy Switch", "Анатолий Петров",
     "Валерия", "Герасимчук Лера",
     "Darja Timošenko", "Дарья Тимошенко",
-    "Evgenya", "Евгения Лисица"
+    "Evgenya", "Евгения Лисица",
+    "Jane157", "Евгения Орлова"
 );
 
     @Override
@@ -110,6 +111,8 @@ private static final Map<String, String> nameMap = Map.of(
                     .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
         );
         googleSheetsService.appendRow(row);
+        googleSheetsService.appendRowToSecondSheet(row);
+        googleSheetsService.appendRowToThirdSheet(row);
         sendMessage(chatId, "✅ Обед успешно добавлен! ✅");
     } catch (Exception e) {
         sendMessage(chatId, "⚠️ Ошибка при записи обеда в таблицу: " + e.getMessage());
@@ -154,6 +157,8 @@ private static final Map<String, String> nameMap = Map.of(
                                 .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss")) // timestamp колонка J
                     );
                     googleSheetsService.appendRow(row);
+                    googleSheetsService.appendRowToSecondSheet(row);
+                    googleSheetsService.appendRowToThirdSheet(row);
                     sendMessage(chatId, "✅ Отчёт успешно записан! ✅");
                 } catch (Exception e) {
                     sendMessage(chatId, "⚠️ Ошибка при записи в таблицу: " + e.getMessage());

@@ -18,6 +18,8 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 public class GoogleSheetsService {
     private static final String APPLICATION_NAME = "InfoBot";
     private static final String SPREADSHEET_ID = System.getenv("SPREADSHEET_ID"); // ✅ берёт ID из переменной
+    private static final String SECOND_SPREADSHEET_ID = System.getenv("SECOND_SPREADSHEET_ID");
+    private static final String THIRD_SPREADSHEET_ID = System.getenv("THIRD_SPREADSHEET_ID");
     private static final String RANGE = "отчёты с 01.07.!A:L";
     private static Sheets sheetsService;
 
@@ -57,6 +59,24 @@ public class GoogleSheetsService {
         sheetsService.spreadsheets()
                 .values()
                 .append(SPREADSHEET_ID, RANGE, body)
+                .setValueInputOption("RAW")
+                .execute();
+    }
+
+    public void appendRowToSecondSheet(List<Object> rowData) throws Exception {
+        ValueRange body = new ValueRange().setValues(List.of(rowData));
+        sheetsService.spreadsheets()
+                .values()
+                .append(SECOND_SPREADSHEET_ID, RANGE, body)
+                .setValueInputOption("RAW")
+                .execute();
+    }
+
+    public void appendRowToThirdSheet(List<Object> rowData) throws Exception {
+        ValueRange body = new ValueRange().setValues(List.of(rowData));
+        sheetsService.spreadsheets()
+                .values()
+                .append(THIRD_SPREADSHEET_ID, RANGE, body)
                 .setValueInputOption("RAW")
                 .execute();
     }
