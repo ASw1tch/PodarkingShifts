@@ -27,7 +27,8 @@ private static final Map<String, String> nameMap = Map.of(
     "Валерия", "Герасимчук Лера",
     "Darja Timošenko", "Дарья Тимошенко",
     "Evgenya", "Евгения Лисица",
-    "Jane157", "Евгения Орлова"
+    "Jane157", "Евгения Орлова",
+    "Irina IM", "Ирина Маркович"
 );
 
     @Override
