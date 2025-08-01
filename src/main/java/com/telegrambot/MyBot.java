@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -28,7 +29,8 @@ private static final Map<String, String> nameMap = Map.of(
     "Darja Timošenko", "Дарья Тимошенко",
     "Evgenya", "Евгения Лисица",
     "Jane157", "Евгения Орлова",
-    "Irina IM", "Ирина Маркович"
+    "Irina IM", "Ирина Маркович",
+    "Дарья", "Дарья Якимова"
 );
 
     @Override
@@ -48,6 +50,55 @@ private static final Map<String, String> nameMap = Map.of(
         Message msg = update.getMessage();
         long chatId = msg.getChatId();
         String text = msg.getText().trim();
+
+        if (text.startsWith("/АдминКомментарий")) {
+            String tgFullName = (msg.getFrom().getLastName() != null)
+                    ? msg.getFrom().getFirstName() + " " + msg.getFrom().getLastName()
+                    : msg.getFrom().getFirstName();
+            String correctedName = nameMap.getOrDefault(tgFullName, tgFullName);
+            Long userId = msg.getFrom().getId();
+
+            Set<String> allowedAdmins = Set.of(
+                "Евгения Лисица",
+                "Евгения Орлова",
+                "Анатолий Петров"
+            );
+
+            if (!allowedAdmins.contains(correctedName)) {
+                sendMessage(chatId, "⛔ У тебя нет прав на использование этой команды.");
+                return;
+            }
+
+            String comment = text.replaceFirst("/АдминКомментарий", "").trim();
+            if (comment.isEmpty()) {
+                sendMessage(chatId, "❗ Пожалуйста, укажи текст комментария после команды.");
+                return;
+            }
+
+            try {
+                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                String timestamp = java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
+                        .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
+
+                List<Object> row = List.of(
+                    safe(correctedName), date, "", "", "", "", "", comment, "", timestamp
+                );
+
+                List<Object> rowForThirdSheet = List.of(
+                    safe(correctedName), date, "", "", "", "", "", "", comment, "", "", timestamp
+                );
+
+                googleSheetsService.appendRow(row);
+                googleSheetsService.appendRowToSecondSheet(row);
+                googleSheetsService.appendRowToThirdSheet(rowForThirdSheet);
+
+                sendMessage(chatId, "✅ Админ-комментарий добавлен.");
+            } catch (Exception e) {
+                sendMessage(chatId, "⚠️ Ошибка при добавлении комментария: " + e.getMessage());
+                e.printStackTrace();
+            }
+            return;
+        }
 
         if (text.equalsIgnoreCase("/dinner") && sessions.containsKey(chatId)) {
             UserSession session = sessions.get(chatId);
@@ -199,9 +250,13 @@ private static final Map<String, String> nameMap = Map.of(
                 session.step = BotStep.DONE;
             }
             case DONE ->
-                    sendMessage(chatId, "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед");
+                    sendMessage(chatId,
+                    "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед\n\n" +
+                    "(Только для админа) Если в отчёте допущена ошибка, нажми /АдминКомментарий");
         }
     }
+
+    
 
     private void sendMessage(long chatId, String text) {
         SendMessage message = new SendMessage();
