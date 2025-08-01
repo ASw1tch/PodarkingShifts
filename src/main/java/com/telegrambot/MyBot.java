@@ -69,34 +69,19 @@ private static final Map<String, String> nameMap = Map.of(
                 return;
             }
 
-            String comment = text.replaceFirst("/adminKomment", "").trim();
-            if (comment.isEmpty()) {
-                sendMessage(chatId, "❗ Пожалуйста, укажи текст комментария после команды.");
-                return;
+            UserSession session = sessions.get(chatId);
+            if (session == null) {
+                session = new UserSession();
+                String rawFirstName = msg.getFrom().getFirstName();
+                String rawLastName = msg.getFrom().getLastName();
+                String fullName = (rawLastName != null) ? rawFirstName + " " + rawLastName : rawFirstName;
+                session.fullName = nameMap.getOrDefault(fullName, fullName);
+                session.date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                sessions.put(chatId, session);
             }
 
-            try {
-                String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-                String timestamp = java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
-                        .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
-
-                List<Object> row = List.of(
-                    safe(correctedName), date, "", "", "", "", "", comment, "", timestamp
-                );
-
-                List<Object> rowForThirdSheet = List.of(
-                    safe(correctedName), date, "", "", "", "", "", "", comment, "", "", timestamp
-                );
-
-                googleSheetsService.appendRow(row);
-                googleSheetsService.appendRowToSecondSheet(row);
-                googleSheetsService.appendRowToThirdSheet(rowForThirdSheet);
-
-                sendMessage(chatId, "✅ Админ-комментарий добавлен.");
-            } catch (Exception e) {
-                sendMessage(chatId, "⚠️ Ошибка при добавлении комментария: " + e.getMessage());
-                e.printStackTrace();
-            }
+            session.step = BotStep.ADMIN_COMMENT;
+            sendMessage(chatId, "Напиши, пожалуйста, комментарий");
             return;
         }
 
@@ -145,6 +130,27 @@ private static final Map<String, String> nameMap = Map.of(
         UserSession session = sessions.get(chatId);
 
         switch (session.step) {
+            case ADMIN_COMMENT -> {
+                session.comment = text;
+                try {
+                    String timestamp = java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
+                            .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
+                    List<Object> row = List.of(
+                        safe(session.fullName), session.date, "", "", "", "", "", session.comment, "", timestamp
+                    );
+                    List<Object> rowForThirdSheet = List.of(
+                        safe(session.fullName), session.date, "", "", "", "", "", "", session.comment, "", "", timestamp
+                    );
+                    googleSheetsService.appendRow(row);
+                    googleSheetsService.appendRowToSecondSheet(row);
+                    googleSheetsService.appendRowToThirdSheet(rowForThirdSheet);
+                    sendMessage(chatId, "✅ Админ-комментарий добавлен.");
+                } catch (Exception e) {
+                    sendMessage(chatId, "⚠️ Ошибка при добавлении комментария: " + e.getMessage());
+                    e.printStackTrace();
+                }
+                session.step = BotStep.DONE;
+            }
             case LUNCH -> {
     session.lunchDuration = text;
 
@@ -251,8 +257,9 @@ private static final Map<String, String> nameMap = Map.of(
             }
             case DONE ->
                     sendMessage(chatId,
-                    "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед.\n" +
-                    "(Только для админа) Если в отчёте допущена ошибка, нажми /adminKomment");
+                    "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед.\n \n" +
+                    "(*Только для админа*) \n" +
+                    "Если в отчёте допущена ошибка, нажми /adminKomment");
         }
     }
 

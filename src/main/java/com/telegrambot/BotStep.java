@@ -7,5 +7,7 @@ public enum BotStep {
     ACTIVITY,
     ACTIVITY_TIME,
     COMMENT,
-    DINNER, DONE
+    DINNER,
+    ADMIN_COMMENT,
+    DONE
 }
