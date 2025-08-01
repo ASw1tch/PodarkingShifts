@@ -51,7 +51,7 @@ private static final Map<String, String> nameMap = Map.of(
         long chatId = msg.getChatId();
         String text = msg.getText().trim();
 
-        if (text.startsWith("/АдминКомментарий")) {
+        if (text.startsWith("/adminKomment")) {
             String tgFullName = (msg.getFrom().getLastName() != null)
                     ? msg.getFrom().getFirstName() + " " + msg.getFrom().getLastName()
                     : msg.getFrom().getFirstName();
