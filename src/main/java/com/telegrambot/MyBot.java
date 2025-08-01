@@ -136,10 +136,10 @@ private static final Map<String, String> nameMap = Map.of(
                     String timestamp = java.time.ZonedDateTime.now(java.time.ZoneId.of("Europe/Belgrade"))
                             .format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
                     List<Object> row = List.of(
-                        safe(session.fullName), session.date, "", "", "", "", "", session.comment, "", timestamp
+                        safe(session.fullName), session.date, "", "", "", "АДМИН_КОММЕНТ", "", session.comment, "", timestamp
                     );
                     List<Object> rowForThirdSheet = List.of(
-                        safe(session.fullName), session.date, "", "", "", "", "", "", session.comment, "", "", timestamp
+                        safe(session.fullName), session.date, "", "", "", "", "АДМИН_КОММЕНТ", "", session.comment, "", "", timestamp
                     );
                     googleSheetsService.appendRow(row);
                     googleSheetsService.appendRowToSecondSheet(row);
@@ -255,11 +255,20 @@ private static final Map<String, String> nameMap = Map.of(
 
                 session.step = BotStep.DONE;
             }
-            case DONE ->
-                    sendMessage(chatId,
-                    "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед.\n \n" +
-                    "(*Только для админа*) \n" +
-                    "Если в отчёте допущена ошибка, нажми /adminKomment");
+            case DONE -> {
+                SendMessage message = new SendMessage();
+                message.setChatId(String.valueOf(chatId));
+                message.setText(
+                    "Хочешь добавить новый проект, деятельность и время? Снова жми /start или жми /dinner чтобы добавить обед.\n\n" +
+                    "*Только для админа*: Если в отчёте допущена ошибка, нажми /adminKomment"
+                );
+                message.setParseMode("Markdown");
+                try {
+                    execute(message);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
