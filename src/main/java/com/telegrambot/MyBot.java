@@ -69,7 +69,7 @@ private static final Map<String, String> nameMap = Map.of(
                 return;
             }
 
-            String comment = text.replaceFirst("/АдминКомментарий", "").trim();
+            String comment = text.replaceFirst("/adminKomment", "").trim();
             if (comment.isEmpty()) {
                 sendMessage(chatId, "❗ Пожалуйста, укажи текст комментария после команды.");
                 return;
