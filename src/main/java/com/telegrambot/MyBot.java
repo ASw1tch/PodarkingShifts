@@ -24,7 +24,7 @@ public class MyBot extends TelegramLongPollingBot {
     // ✅ Карта для замены Telegram имён на полные
 private static final Map<String, String> nameMap = Map.of(
     "ARTEM", "Артём Пушков",
-    "Anatoliy Switch", "Анатолий Петров",
+    "Anatoliy Petrov", "Анатолий Петров",
     "Валерия", "Герасимчук Лера",
     "Darja Timošenko", "Дарья Тимошенко",
     "Evgenya", "Евгения Лисица",
