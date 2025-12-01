@@ -26,7 +26,6 @@ private static final Map<String, String> nameMap = Map.of(
     "ARTEM", "Артём Пушков",
     "Anatoliy Petrov", "Анатолий Петров",
     "Валерия", "Герасимчук Лера",
-    "Darja Timošenko", "Дарья Тимошенко",
     "Evgenya", "Евгения Лисица",
     "Jane157", "Евгения Орлова",
     "Irina IM", "Ирина Маркович",
